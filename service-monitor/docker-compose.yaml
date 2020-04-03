@@ -1,0 +1,26 @@
+version: '3'
+services:
+  monitor:
+    build: ./monitor
+    ports:
+      - "5000:5000"
+    environment:
+      - DB=mongodb://db:27017/db
+
+  writer:
+    build: ./writer
+    ports:
+      - "6000:6000"
+    volumes:
+      - ./data/writer:/writer/data
+
+  db:
+    image: mongo:latest
+    environment:
+      - MONGO_DATA_DIR=/usr/data/db
+      - MONGO_LOG_DIR=/dev/null
+    volumes:
+      - ./data/db:/usr/data/db
+    ports:
+        - "27017:27017"
+    command: mongod --smallfiles --logpath=/dev/null
